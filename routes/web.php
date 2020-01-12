@@ -20,3 +20,6 @@ Route::get('/', function () {
 Route::get("/login", "DiscordRedirectController");
 Route::get("/login/discord-callback", "DiscordLoginController@login");
 Route::get("/logout","DiscordLoginController@logout");
+
+Route::resource("categories.resources","ResourceController");
+Route::resource("categories","ResourceCategoryController");

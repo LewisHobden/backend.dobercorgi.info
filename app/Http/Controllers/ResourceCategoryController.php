@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\ResourceCategory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 
 class ResourceCategoryController extends Controller
 {
@@ -15,7 +16,7 @@ class ResourceCategoryController extends Controller
     public function index()
     {
         //
-
+        return view("resource_category.index")->withCategories(ResourceCategory::all());
     }
 
     /**
@@ -26,7 +27,7 @@ class ResourceCategoryController extends Controller
     public function create()
     {
         //
-
+        return view("resource_category.create");
     }
 
     /**
@@ -38,6 +39,15 @@ class ResourceCategoryController extends Controller
     public function store(Request $request)
     {
         //
+        $request->validate([
+            'title' => 'required',
+            'icon' => 'required',
+            'description' => 'required',
+        ]);
+
+        ResourceCategory::create($request->all());
+
+        return Redirect::to('categories')->with('success','New category has been added!');
     }
 
     /**

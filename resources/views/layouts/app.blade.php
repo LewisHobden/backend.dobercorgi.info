@@ -10,7 +10,7 @@
     <title>@yield('title') | Dobercorgi Backend</title>
 
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,600,700|Material+Icons" rel="stylesheet">
 </head>
 <body>
 <div class="flex-center position-ref full-height">
@@ -35,7 +35,7 @@
         </div>
     </nav>
 
-    <div class="container">
+    <div class="container pt-md-3">
         @yield('content')
     </div>
 </div>

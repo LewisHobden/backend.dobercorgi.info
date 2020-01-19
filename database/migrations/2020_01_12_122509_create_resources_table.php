@@ -16,6 +16,7 @@ class CreateResourcesTable extends Migration
         Schema::create('resources',function(Blueprint $table) {
             $table->bigIncrements('id');
             $table->timestamps();
+            $table->unsignedBigInteger('category_id');
             $table->foreign('category_id')->references('id')->on('resource_categories');
             $table->char('title',255);
             $table->text('content');

@@ -64,34 +64,54 @@ class ResourceCategoryController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param \App\ResourceCategory $resourceCategory
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(ResourceCategory $resourceCategory)
+    public function edit(int $id)
     {
         //
+        $resourceCategory = ResourceCategory::find($id);
+
+        if(null === $resourceCategory)
+            return abort(404);
+
+        return view("resource_category.edit")->withCategory($resourceCategory);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @param \App\ResourceCategory $resourceCategory
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request,ResourceCategory $resourceCategory)
+    public function update(Request $request,int $id)
     {
         //
+        $request->validate([
+            'title' => 'required',
+            'icon' => 'required',
+            'description' => 'required',
+        ]);
+
+        ResourceCategory::findOrFail($id)
+            ->fill($request->toArray())
+            ->update();
+
+        return Redirect::to('categories')->with('success','Your category has been updated.');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\ResourceCategory $resourceCategory
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy(ResourceCategory $resourceCategory)
+    public function destroy(int $id)
     {
         //
+        ResourceCategory::findOrFail($id)->delete();
+
+        return Redirect::to('categories')->with('success','Your category has been deleted.');
     }
 }

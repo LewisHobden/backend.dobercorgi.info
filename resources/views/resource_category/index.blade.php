@@ -14,10 +14,10 @@
     <div class="table-responsive">
         <table class="table">
             <tr class="thead-light">
-                <th class="font-weight-bold">Title</th>
-                <th class="font-weight-bold">Icon</th>
-                <th class="font-weight-bold">Description</th>
-                <th class="font-weight-bold">Options</th>
+                <th>Title</th>
+                <th>Icon</th>
+                <th>Description</th>
+                <th>Options</th>
             </tr>
             @foreach($categories as $category)
                 <tr>
@@ -25,6 +25,9 @@
                     <td style="font-family: 'Material Icons',serif;">{{ $category->icon }}</td>
                     <td>{{ $category->description }}</td>
                     <td class="d-flex">
+                        <a href="{{ route("categories.resources.index",$category->id) }}"
+                           class="btn btn-outline-primary mr-2">Resources</a>
+
                         <a href="{{ route("categories.edit",$category->id) }}"
                            class="btn btn-outline-primary mr-2">Edit</a>
 

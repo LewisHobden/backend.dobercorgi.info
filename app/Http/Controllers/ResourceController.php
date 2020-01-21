@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Resource;
+use App\ResourceCategory;
 use Illuminate\Http\Request;
 
 class ResourceController extends Controller
@@ -10,21 +11,37 @@ class ResourceController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param int $category_id
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(int $category_id)
     {
         //
+        $category = ResourceCategory::find($category_id);
+
+        if(null === $category)
+            return abort(404);
+
+        $resources = Resource::where(["category_id" => $category_id]);
+
+        return view("resource_category.resource.index")->withCategory($category)->withResources($resources);
     }
 
     /**
      * Show the form for creating a new resource.
      *
+     * @param int $category_id
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(int $category_id)
     {
         //
+        $category = ResourceCategory::find($category_id);
+
+        if(null === $category)
+            return abort(404);
+
+        return view("resource_category.resource.create")->withCategory($category);
     }
 
     /**

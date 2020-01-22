@@ -1,11 +1,7 @@
-@extends('layouts/app')
+@extends('resource_category/resource/resource_template')
 @section('title','Resources')
 
-@section('content')
-    <h1><span style="font-family: 'Material Icons';">{{ $category->icon }}</span> Category: {{ $category->title }}</h1>
-    <p>Description: {{ $category->description }}</p>
-    <hr/>
-
+@section('other-content')
     <h1>Resources</h1>
     @if(session("success"))
         <p class="alert alert-success">{{ session("success") }} <a href="#" class="close" data-dismiss="alert"
@@ -28,15 +24,18 @@
                     <td>{{ $resource->title }}</td>
                     <td>{{ $resource->content }}</td>
                     <td><a href="{{ $resource->action }}">{{ $resource->action }}</a></td>
-                    <td>{{ empty($resource->file_key) ? "Yes" : "No" }}</td>
-                    <a href="{{ route("categories.resources.edit",$resource->id) }}"
-                       class="btn btn-outline-primary mr-2">Edit</a>
+                    <td>{{ empty($resource->file_key) ? "No" : "Yes" }}</td>
+                    <td class="d-flex">
+                        <a href="{{ route("categories.resources.edit",[$category->id, $resource->id]) }}"
+                           class="btn btn-outline-primary mr-2">Edit</a>
 
-                    <form action="{{ route("categories.resources.destroy",$resource->id) }}" method="POST">
-                        {{ csrf_field() }}
-                        @method('DELETE')
-                        <button class="btn btn-outline-danger" type="submit">Delete</button>
-                    </form>
+                        <form action="{{ route("categories.resources.destroy",[$category->id, $resource->id]) }}"
+                              method="POST">
+                            {{ csrf_field() }}
+                            @method('DELETE')
+                            <button class="btn btn-outline-danger" type="submit">Delete</button>
+                        </form>
+                    </td>
                 </tr>
             @endforeach
         </table>

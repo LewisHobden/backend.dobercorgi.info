@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Resource;
 use App\ResourceCategory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 
 class ResourceController extends Controller
 {
@@ -22,7 +24,7 @@ class ResourceController extends Controller
         if(null === $category)
             return abort(404);
 
-        $resources = Resource::where(["category_id" => $category_id]);
+        $resources = Resource::where(["category_id" => $category_id])->get();
 
         return view("resource_category.resource.index")->withCategory($category)->withResources($resources);
     }
@@ -47,12 +49,33 @@ class ResourceController extends Controller
     /**
      * Store a newly created resource in storage.
      *
+     * @param int $category_id
      * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(Request $request)
+    public function store(int $category_id,Request $request)
     {
-        //
+        // Validation.
+        $request->validate([
+            "title" => "required|max:255",
+            "action" => "required",
+            "content" => "required"
+        ]);
+
+        // Write the file to the CDN.
+        $file_prefix = "category/{$category_id}/resource/";
+        $request->file("banner_image")->storeAs($file_prefix,$request->file("banner_image")->getClientOriginalName());
+
+        // Add the resource to the database.
+        Resource::create([
+            "category_id" => $category_id,
+            "title" => $request->get("title"),
+            "action" => $request->get("action"),
+            "content" => $request->get("content"),
+            "file_key" => $file_prefix . $request->file("banner_image")->getClientOriginalName()
+        ]);
+
+        return Redirect::to(route('categories.resources.index',$category_id))->with('success','New resource has been added!');
     }
 
     /**
@@ -92,11 +115,19 @@ class ResourceController extends Controller
     /**
      * Remove the specified resource from storage.
      *
+     * @param int $category_id
      * @param \App\Resource $resource
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Exception
      */
-    public function destroy(Resource $resource)
+    public function destroy(int $category_id,Resource $resource)
     {
         //
+        if($resource->file_key)
+            Storage::delete($resource->file_key);
+
+        $resource->delete();
+
+        return Redirect::to(route('categories.resources.index',$category_id))->with('success','Resource has been deleted!');
     }
 }

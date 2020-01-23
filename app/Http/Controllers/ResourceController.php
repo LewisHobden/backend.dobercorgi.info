@@ -63,8 +63,8 @@ class ResourceController extends Controller
         ]);
 
         // Write the file to the CDN.
-        $file_prefix = "category/{$category_id}/resource/";
-        $request->file("banner_image")->storeAs($file_prefix,$request->file("banner_image")->getClientOriginalName());
+        $file_prefix = "category/{$category_id}/resource";
+        $filename = $request->file("banner_image")->storePubliclyAs($file_prefix,$request->file("banner_image")->getClientOriginalName());
 
         // Add the resource to the database.
         Resource::create([
@@ -72,7 +72,7 @@ class ResourceController extends Controller
             "title" => $request->get("title"),
             "action" => $request->get("action"),
             "content" => $request->get("content"),
-            "file_key" => $file_prefix . $request->file("banner_image")->getClientOriginalName()
+            "file_key" => $filename
         ]);
 
         return Redirect::to(route('categories.resources.index',$category_id))->with('success','New resource has been added!');
@@ -92,12 +92,21 @@ class ResourceController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
+     * @param int $category_id
      * @param \App\Resource $resource
      * @return \Illuminate\Http\Response
      */
-    public function edit(Resource $resource)
+    public function edit(int $category_id,Resource $resource)
     {
         //
+        $category = ResourceCategory::find($category_id);
+
+        if(null === $category)
+            return abort(404);
+
+        return view("resource_category.resource.edit")
+            ->withCategory($category)
+            ->withResource($resource);
     }
 
     /**
@@ -123,8 +132,7 @@ class ResourceController extends Controller
     public function destroy(int $category_id,Resource $resource)
     {
         //
-        if($resource->file_key)
-            Storage::delete($resource->file_key);
+        Storage::delete($resource->file_key);
 
         $resource->delete();
 

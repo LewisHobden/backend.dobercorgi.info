@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\ResourceCategory;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 
@@ -15,7 +16,6 @@ class ResourceCategoryController extends Controller
      */
     public function index()
     {
-        //
         return view("resource_category.index")->withCategories(ResourceCategory::all());
     }
 
@@ -26,7 +26,6 @@ class ResourceCategoryController extends Controller
      */
     public function create()
     {
-        //
         return view("resource_category.create");
     }
 
@@ -34,11 +33,10 @@ class ResourceCategoryController extends Controller
      * Store a newly created resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
     {
-        //
         $request->validate([
             'title' => 'required',
             'icon' => 'required',
@@ -47,18 +45,7 @@ class ResourceCategoryController extends Controller
 
         ResourceCategory::create($request->all());
 
-        return Redirect::to('categories')->with('success','New category has been added!');
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param \App\ResourceCategory $resourceCategory
-     * @return \Illuminate\Http\Response
-     */
-    public function show(ResourceCategory $resourceCategory)
-    {
-        //
+        return $this->redirectToIndexForSuccess('New category has been added!');
     }
 
     /**
@@ -69,7 +56,6 @@ class ResourceCategoryController extends Controller
      */
     public function edit(int $id)
     {
-        //
         $resourceCategory = ResourceCategory::find($id);
 
         if(null === $resourceCategory)
@@ -87,7 +73,6 @@ class ResourceCategoryController extends Controller
      */
     public function update(Request $request,int $id)
     {
-        //
         $request->validate([
             'title' => 'required',
             'icon' => 'required',
@@ -98,7 +83,7 @@ class ResourceCategoryController extends Controller
             ->fill($request->toArray())
             ->update();
 
-        return Redirect::to('categories')->with('success','Your category has been updated.');
+        return $this->redirectToIndexForSuccess('Your category has been updated.');
     }
 
     /**
@@ -109,9 +94,18 @@ class ResourceCategoryController extends Controller
      */
     public function destroy(int $id)
     {
-        //
         ResourceCategory::findOrFail($id)->delete();
 
-        return Redirect::to('categories')->with('success','Your category has been deleted.');
+        return $this->redirectToIndexForSuccess('Your category has been deleted.');
+    }
+
+    /**
+     * Returns a consistent redirect response for a successful action.
+     * @param string $message
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    private function redirectToIndexForSuccess(string $message): RedirectResponse
+    {
+        return Redirect::to(route('categories'))->with('success',$message);
     }
 }

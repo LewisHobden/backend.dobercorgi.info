@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Resource;
 use App\ResourceCategory;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
@@ -18,7 +19,6 @@ class ResourceController extends Controller
      */
     public function index(int $category_id)
     {
-        //
         $category = ResourceCategory::find($category_id);
 
         if(null === $category)
@@ -37,7 +37,6 @@ class ResourceController extends Controller
      */
     public function create(int $category_id)
     {
-        //
         $category = ResourceCategory::find($category_id);
 
         if(null === $category)
@@ -78,18 +77,7 @@ class ResourceController extends Controller
             "file_key" => $filename ?? ""
         ]);
 
-        return Redirect::to(route('categories.resources.index',$category_id))->with('success','New resource has been added!');
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param \App\Resource $resource
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Resource $resource)
-    {
-        //
+        return $this->redirectToIndexForSuccess($category_id,'New resource has been added!');
     }
 
     /**
@@ -101,7 +89,6 @@ class ResourceController extends Controller
      */
     public function edit(int $category_id,Resource $resource)
     {
-        //
         $category = ResourceCategory::find($category_id);
 
         if(null === $category)
@@ -118,7 +105,7 @@ class ResourceController extends Controller
      * @param int $category_id
      * @param \Illuminate\Http\Request $request
      * @param \App\Resource $resource
-     * @return void
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(int $category_id,Request $request,Resource $resource)
     {
@@ -127,7 +114,7 @@ class ResourceController extends Controller
         $request->validate([
             "title" => "required|max:255",
             "action" => "required",
-            "content" => "required"
+            "content" => "requ))->with('success'ired"
         ]);
 
         // Write the file to the CDN.
@@ -146,7 +133,7 @@ class ResourceController extends Controller
 
         $resource->save();
 
-        return Redirect::to(route('categories.resources.index',$category_id))->with('success','New resource has been edited!');
+        return $this->redirectToIndexForSuccess($category_id,'New resource has been edited!');
     }
 
     /**
@@ -159,11 +146,23 @@ class ResourceController extends Controller
      */
     public function destroy(int $category_id,Resource $resource)
     {
-        //
+        // If the file exists, delete it.
         Storage::delete($resource->file_key);
 
+        // Remove it from the database.
         $resource->delete();
 
-        return Redirect::to(route('categories.resources.index',$category_id))->with('success','Resource has been deleted!');
+        return $this->redirectToIndexForSuccess($category_id,'Resource has been deleted!');
+    }
+
+    /**
+     * Returns a consistent redirect response for a successful action.
+     * @param int $category_id
+     * @param string $message
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    private function redirectToIndexForSuccess(int $category_id,string $message): RedirectResponse
+    {
+        return Redirect::to(route('categories.resources.index',$category_id))->with('success',$message);
     }
 }

@@ -63,8 +63,11 @@ class ResourceController extends Controller
         ]);
 
         // Write the file to the CDN.
-        $file_prefix = "category/{$category_id}/resource";
-        $filename = $request->file("banner_image")->storePubliclyAs($file_prefix,$request->file("banner_image")->getClientOriginalName());
+        if($request->file("banner_image")) {
+            $file_prefix = "category/{$category_id}/resource";
+            $filename = $request->file("banner_image")
+                ->storePubliclyAs($file_prefix,$request->file("banner_image")->getClientOriginalName(),"public");
+        }
 
         // Add the resource to the database.
         Resource::create([
@@ -72,7 +75,7 @@ class ResourceController extends Controller
             "title" => $request->get("title"),
             "action" => $request->get("action"),
             "content" => $request->get("content"),
-            "file_key" => $filename
+            "file_key" => $filename ?? ""
         ]);
 
         return Redirect::to(route('categories.resources.index',$category_id))->with('success','New resource has been added!');
@@ -112,13 +115,38 @@ class ResourceController extends Controller
     /**
      * Update the specified resource in storage.
      *
+     * @param int $category_id
      * @param \Illuminate\Http\Request $request
      * @param \App\Resource $resource
-     * @return \Illuminate\Http\Response
+     * @return void
      */
-    public function update(Request $request,Resource $resource)
+    public function update(int $category_id,Request $request,Resource $resource)
     {
         //
+        // Validation.
+        $request->validate([
+            "title" => "required|max:255",
+            "action" => "required",
+            "content" => "required"
+        ]);
+
+        // Write the file to the CDN.
+        if($request->file("banner_image")) {
+            $file_prefix = "category/{$category_id}/resource";
+            $filename = $request->file("banner_image")
+                ->storePubliclyAs($file_prefix,$request->file("banner_image")->getClientOriginalName(),"public");
+
+            $resource->file_key = $filename;
+        }
+
+        // Add the resource to the database.
+        $resource->title = $request->get("title");
+        $resource->action = $request->get("action");
+        $resource->content = $request->get("content");
+
+        $resource->save();
+
+        return Redirect::to(route('categories.resources.index',$category_id))->with('success','New resource has been edited!');
     }
 
     /**

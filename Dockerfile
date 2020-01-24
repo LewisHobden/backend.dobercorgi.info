@@ -1,11 +1,10 @@
-FROM composer:1.6.5 as build
+FROM php:latest
+RUN apt-get update -y && apt-get install -y openssl zip unzip git
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+RUN docker-php-ext-install pdo
 WORKDIR /app
 COPY . /app
 RUN composer install
 
-FROM php:7.4.0-apache
-EXPOSE 80
-COPY --from=build /app /app
-COPY vhost.conf /etc/apache2/sites-available/000-default.conf
-RUN chown -R www-data:www-data /app \
-    && a2enmod rewrite
+CMD php artisan serve --host=0.0.0.0 --port=5000
+EXPOSE 5000

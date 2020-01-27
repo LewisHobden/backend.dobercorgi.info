@@ -17,6 +17,12 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get("/login", "DiscordRedirectController");
+Route::get("/login","DiscordRedirectController")->name("login");
 Route::get("/login/discord-callback", "DiscordLoginController@login");
 Route::get("/logout","DiscordLoginController@logout");
+
+Route::resource("categories.resources","ResourceController")
+    ->middleware(["auth",\App\Http\Middleware\IsAdmin::class . ":" . \App\Enums\DiscordPermissions::MANAGE_GUILD]);
+
+Route::resource("categories","ResourceCategoryController")
+    ->middleware(["auth",\App\Http\Middleware\IsAdmin::class . ":" . \App\Enums\DiscordPermissions::MANAGE_GUILD]);

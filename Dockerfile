@@ -12,7 +12,6 @@ COPY . /app
 RUN echo $PRODUCTION_ENV > .env
 
 RUN composer install --optimize-autoloader --no-dev
-RUN php artisan route:cache
 RUN php artisan config:cache
 
 

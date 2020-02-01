@@ -1,5 +1,5 @@
 application:
-    migrateCommand: php artisan migrate
+    migrateCommand: php artisan migrate --force
 
 service:
     url: http://backend.dobercorgi.info

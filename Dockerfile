@@ -9,10 +9,10 @@ RUN chmod -Rf 777 /var/www/storage/
 
 RUN composer install
 
-RUN printf $PRODUCTION_ENV >> .env
-RUN printf "DB_USERNAME=$POSTGRES_USER" >> .env
-RUN printf "DB_DATABASE=$POSTGRES_DB" >> .env
-RUN printf "DB_PASSWORD=$POSTGRES_PASSWORD" > .env
+RUN echo $PRODUCTION_ENV > .env
+RUN printf "DB_USERNAME=$POSTGRES_USER\n" >> .env
+RUN printf "DB_DATABASE=$POSTGRES_DB\n" >> .env
+RUN printf "DB_PASSWORD=$POSTGRES_PASSWORD\n" > .env
 
 ENV PHP_VERSION 7.4
 ENV LARAVEL_APP 1

@@ -1,8 +1,8 @@
-# syntax = docker/dockerfile:experimental
+ARG PRODUCTION_ENV
+
 FROM gcr.io/nomadic-groove-240312/php7-nginx:latest
-    
-RUN --mount=type=secret,id=auto-devops-build-secrets . /run/secrets/auto-devops-build-secrets && $COMMAND && \
-printf '${PRODUCTION_ENV}' >> .env
+
+RUN printf '${PRODUCTION_ENV}' > .env
 
 COPY . /var/www/
 RUN chmod -Rf 777 /var/www/storage/

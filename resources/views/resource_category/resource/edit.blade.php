@@ -13,7 +13,7 @@
 
     @if($resource->file_key)
         <h2>Existing Banner</h2>
-        <img class="img-thumbnail" alt="Current banner image" src="{{ Storage::url($resource->file_key) }}">
+        <img class="img-thumbnail" alt="Current banner image" src="{{ Storage::url($resource->file_key) }}"/>
     @endif
 
     <form action="{{ route("categories.resources.update", [$category->id, $resource->id]) }}" method="POST"

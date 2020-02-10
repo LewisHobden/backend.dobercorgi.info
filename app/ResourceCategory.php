@@ -15,4 +15,9 @@ class ResourceCategory extends Model
     protected $fillable = [
         "title","icon","description"
     ];
+
+    public function resources()
+    {
+        return $this->hasMany(Resource::class,"category_id");
+    }
 }

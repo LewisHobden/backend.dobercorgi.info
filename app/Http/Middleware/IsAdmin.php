@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Enums\DiscordPermissions;
 use Closure;
 
 class IsAdmin
@@ -16,7 +17,7 @@ class IsAdmin
      */
     public function handle($request,Closure $next,$permission)
     {
-        if(!$permission & $request->session()->get("guild_permissions"))
+        if($permission != ($request->session()->get("guild_permissions") & $permission))
             return abort(501);
 
         return $next($request);

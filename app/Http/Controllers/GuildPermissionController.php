@@ -44,7 +44,7 @@ class GuildPermissionController extends Controller
         $guilds = json_decode((string)$response->getBody());
 
         foreach($guilds as $guild) {
-            if($guild->id !== env("DISCORD_GUILD_ID")) {
+            if($guild->id === env("DISCORD_GUILD_ID")) {
                 session(["guild_permissions" => $guild->permissions]);
                 return;
             }

@@ -13,6 +13,9 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::get('categories/',function(Request $request)
+{
+    $controller = new \App\Http\Controllers\CategoryManifestController();
+
+    return $controller->getManifest();
 });

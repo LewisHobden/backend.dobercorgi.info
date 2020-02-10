@@ -1,0 +1,7 @@
+application:
+    migrateCommand: php artisan migrate --force
+
+service:
+    url: http://backend.dobercorgi.info
+    externalPort: 80
+    internalPort: 80

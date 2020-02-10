@@ -65,7 +65,7 @@ class ResourceController extends Controller
         if($request->file("banner_image")) {
             $file_prefix = "category/{$category_id}/resource";
             $filename = $request->file("banner_image")
-                ->storePubliclyAs($file_prefix,$request->file("banner_image")->getClientOriginalName(),"public");
+                ->storePubliclyAs($file_prefix,$request->file("banner_image")->getClientOriginalName());
         }
 
         // Add the resource to the database.
@@ -114,14 +114,14 @@ class ResourceController extends Controller
         $request->validate([
             "title" => "required|max:255",
             "action" => "required",
-            "content" => "requ))->with('success'ired"
+            "content" => "required"
         ]);
 
         // Write the file to the CDN.
         if($request->file("banner_image")) {
             $file_prefix = "category/{$category_id}/resource";
             $filename = $request->file("banner_image")
-                ->storePubliclyAs($file_prefix,$request->file("banner_image")->getClientOriginalName(),"public");
+                ->storePubliclyAs($file_prefix,$request->file("banner_image")->getClientOriginalName());
 
             $resource->file_key = $filename;
         }

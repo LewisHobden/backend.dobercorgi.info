@@ -1,10 +1,16 @@
-FROM php:latest
-RUN apt-get update -y && apt-get install -y openssl zip unzip git
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-RUN docker-php-ext-install pdo
-WORKDIR /app
-COPY . /app
+FROM gcr.io/nomadic-groove-240312/php7-nginx:latest
+
+ARG PRODUCTION_ENV
+
+COPY . /var/www/
+WORKDIR /var/www/
+RUN chmod -Rf 777 /var/www/storage/
+
+RUN touch .env
+RUN echo ${PRODUCTION_ENV} | base64 -d > .env
+
+RUN apk add nodejs nodejs-npm
 RUN composer install
 
-CMD php artisan serve --host=0.0.0.0 --port=5000
-EXPOSE 5000
+RUN npm install
+RUN npm run production

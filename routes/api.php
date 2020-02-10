@@ -13,6 +13,9 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::get('manifest/',function(Request $request) {
-    return ["test" => "this is a test"];
+Route::get('categories/',function(Request $request)
+{
+    $controller = new \App\Http\Controllers\CategoryManifestController();
+
+    return $controller->getManifest();
 });

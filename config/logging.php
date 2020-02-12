@@ -37,7 +37,7 @@ return [
     'channels' => [
         'stack' => [
             'driver' => 'stack',
-            'channels' => ['single'],
+            'channels' => ['single','discord'],
             'ignore_exceptions' => false,
         ],
 
@@ -60,6 +60,17 @@ return [
             'username' => 'Laravel Log',
             'emoji' => ':boom:',
             'level' => 'critical',
+        ],
+
+        'discord' => [
+            'driver' => 'monolog',
+            'handler' => \App\DiscordHandler::class,
+            'level' => 'debug',
+            'formatter' => \Monolog\Formatter\LineFormatter::class,
+            'handler_with' => [
+                'webHooks' => [env('LOG_DISCORD_WEBHOOK_URL')]
+            ],
+            'formatter' => 'default'
         ],
 
         'papertrail' => [

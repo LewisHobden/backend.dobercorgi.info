@@ -16,6 +16,7 @@
         "laravel/ui": "^1.1",
         "league/flysystem": "^1.0",
         "league/flysystem-aws-s3-v3": "^1.0",
+        "lefuturiste/monolog-discord-handler": "^0.3.1",
         "wohali/oauth2-discord-new": "^1.0"
     },
     "require-dev": {

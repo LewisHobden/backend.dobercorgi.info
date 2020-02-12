@@ -27,6 +27,11 @@ class DiscordLoginController extends Controller
         $this->userRepository = $repository;
     }
 
+    public function redirectPath()
+    {
+        return "/";
+    }
+
     public function validateLogin(Request $request)
     {
         $request->validate([

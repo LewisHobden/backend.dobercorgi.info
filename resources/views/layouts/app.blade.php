@@ -21,7 +21,7 @@
         </button>
         <a class="navbar-brand" href="#">Dobercorgi Admin</a>
         <div class="collapse navbar-collapse" id="navbarToggle">
-            <ul class="navbar-nav my-2 my-lg-0">
+            <ul class="navbar-nav ml-auto">
                 <li class="nav-item"><a class="nav-link {{ Request::is('/') ? "active" : "" }}" href="{{ url('/') }}">Home</a>
                 </li>
                 <li class="nav-item"><a class="nav-link {{ Request::is('categories/*') ? "active" : "" }}"

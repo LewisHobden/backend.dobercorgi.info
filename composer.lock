@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9cb7291b1cec39d85e053dbba0a02c76",
+    "content-hash": "56a48d5eb2371dcc077c2a9c77fed895",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -1584,6 +1584,59 @@
                 "single sign on"
             ],
             "time": "2018-11-22T18:33:57+00:00"
+        },
+        {
+            "name": "lefuturiste/monolog-discord-handler",
+            "version": "0.3.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/lefuturiste/monolog-discord-handler.git",
+                "reference": "dc9d279c3218f73f338aefaf31d3c72d1e435d2b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/lefuturiste/monolog-discord-handler/zipball/dc9d279c3218f73f338aefaf31d3c72d1e435d2b",
+                "reference": "dc9d279c3218f73f338aefaf31d3c72d1e435d2b",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "*",
+                "monolog/monolog": "*",
+                "php": ">=7.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^8.2",
+                "vlucas/phpdotenv": "^3.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "DiscordHandler\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Matthieu Bessat",
+                    "email": "mail@matthieubessat.fr",
+                    "homepage": "https://matthieubessat.fr"
+                }
+            ],
+            "description": "A simple monolog handler for support Discord webhooks",
+            "homepage": "https://github.com/lefuturiste/monolog-discord-handler",
+            "keywords": [
+                "PSR3",
+                "discord",
+                "integration",
+                "log",
+                "logging",
+                "monolog",
+                "webhook"
+            ],
+            "time": "2019-10-17T05:44:42+00:00"
         },
         {
             "name": "monolog/monolog",

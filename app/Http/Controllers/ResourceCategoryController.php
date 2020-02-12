@@ -85,7 +85,6 @@ class ResourceCategoryController extends Controller
 
         return $this->redirectToIndexForSuccess('Your category has been updated.');
     }
-
     /**
      * Remove the specified resource from storage.
      *
@@ -106,6 +105,6 @@ class ResourceCategoryController extends Controller
      */
     private function redirectToIndexForSuccess(string $message): RedirectResponse
     {
-        return Redirect::to(route('categories'))->with('success',$message);
+        return Redirect::to(route('categories.index'))->with('success',$message);
     }
 }

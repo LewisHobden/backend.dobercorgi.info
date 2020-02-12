@@ -4,3 +4,29 @@
 @import 'variables';
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
+
+.da-main-heading {
+    font-size: 4em;
+}
+
+.da-main-title {
+    text-align: center;
+    padding: 10px;
+}
+
+.da-btn--discord-login:hover {
+    color: #f0f0f0;
+}
+
+.da-btn--discord-login {
+    display: inline-block;
+    text-decoration: none;
+
+    color: white;
+    font-family: Roboto, sans-serif;
+    font-size: 1.5em;
+    padding: 10px;
+
+    background: #7289da;
+    border-radius: 10px;
+}

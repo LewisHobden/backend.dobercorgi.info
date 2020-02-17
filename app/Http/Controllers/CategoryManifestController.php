@@ -12,12 +12,13 @@ class CategoryManifestController
 {
     /**
      * Runs the class, getting the manifest from the database.
-     * @return $this
+     * @return array
      */
-    public function getManifest(): self
+    public function getManifest()
     {
         $query = DB::table("resource_categories")
-            ->select(["title","id","icon","description"]);
+            ->select(["title","id","icon","description"])
+            ->whereNull("deleted_at");
 
         // @todo Include data expiry.
         $manifest = [];

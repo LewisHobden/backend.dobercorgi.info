@@ -28,6 +28,7 @@ class CategoryManifestController
             $resources = DB::table("resources")
                 ->select(["title","content","action","file_key"])
                 ->where("category_id","=",$result->id)
+                ->orderByDesc("file_key")
                 ->get();
 
             $result->items = collect($resources->toArray())->map(function($resource)

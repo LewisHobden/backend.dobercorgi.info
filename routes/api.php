@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -13,9 +11,4 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::get('categories/',function(Request $request)
-{
-    $controller = new \App\Http\Controllers\CategoryManifestController();
-
-    return $controller->getManifest();
-});
+Route::get('categories/',"CategoryManifestController");

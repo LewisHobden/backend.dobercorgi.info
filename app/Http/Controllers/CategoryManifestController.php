@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\DB;
+use App\ManifestRequest;
+use App\ResourceCategory;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 /**
@@ -12,33 +14,36 @@ class CategoryManifestController
 {
     /**
      * Runs the class, getting the manifest from the database.
+     * @param \Illuminate\Http\Request $request
      * @return array
      */
-    public function getManifest()
+    public function __invoke(Request $request)
     {
-        $query = DB::table("resource_categories")
-            ->select(["title","id","icon","description"])
-            ->whereNull("deleted_at");
+        $query = ResourceCategory::select(["id","title","icon","description"])->whereNull("deleted_at");
 
         // @todo Include data expiry.
         $manifest = [];
 
-        foreach($query->get() as $result)
+        foreach($query->getModels() as $result)
         {
-            $resources = DB::table("resources")
-                ->select(["title","content","action","file_key"])
-                ->where("category_id","=",$result->id)
-                ->get();
-
-            $result->items = collect($resources->toArray())->map(function($resource)
-            {
-                return $this->transformRow($resource);
-            });
+            $resources = $result->resources()->orderByDesc("file_key")->getModels();
+            $result->items = collect($resources)->map(\Closure::fromCallable([$this,"transformRow"]));
 
             $manifest[] = $result;
         }
 
+        $this->logRequest($request->ip());
+
         return $manifest;
+    }
+    /**
+     * Logs the request in the database.
+     * @param string $ip_address
+     * @return void
+     */
+    private function logRequest(string $ip_address): void
+    {
+        ManifestRequest::create(["ip_address" => $ip_address]);
     }
     /**
      * Transforms a single resource row to provide the store URL.
@@ -47,13 +52,16 @@ class CategoryManifestController
      */
     private function transformRow($resource)
     {
-        if("" === $resource->file_key)
-            return $resource;
+        $datum = [
+            "id" => $resource->id,
+            "title" => $resource->title,
+            "content" => $resource->content,
+            "action" => $resource->action
+        ];
 
-        $resource->imageUrl = Storage::url($resource->file_key);
+        if($resource->file_key)
+            $datum["imageUrl"] = Storage::url($resource->file_key);
 
-        unset($resource->file_key);
-
-        return $resource;
+        return $datum;
     }
 }

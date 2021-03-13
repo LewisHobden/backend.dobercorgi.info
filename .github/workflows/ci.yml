@@ -30,15 +30,15 @@ jobs:
         run: chmod -R 777 storage bootstrap/cache
 
       - name: Install doctl
-      uses: digitalocean/action-doctl@v2
-      with:
-        token: ${{ secrets.DIGITALOCEAN_TOKEN }}
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_TOKEN }}
 
       - name: Save Container Registry Config
         run: doctl registry login
 
       - name: Copy config to secret
-        run: echo "${{ secrets.ENV }}" > .env
+        run: echo "${{ secrets.PRODUCTION_ENV }}" > .env
 
       - name: Build Docker Container
         run: docker build . -t registry.digitalocean.com/lewis/backend.dobercorgi.info

@@ -18,7 +18,7 @@ jobs:
 
       - name: Prepare Laravel Application
         run: |
-          cp .env.ci .env
+          echo "${{ secrets.PRODUCTION_ENV }}" > .env
           php artisan key:generate
 
       - name: Install front-end dependencies
@@ -36,9 +36,6 @@ jobs:
 
       - name: Save Container Registry Config
         run: doctl registry login
-
-      - name: Copy config to secret
-        run: echo "${{ secrets.PRODUCTION_ENV }}" > .env
 
       - name: Build Docker Container
         run: docker build . -t registry.digitalocean.com/lewis/backend.dobercorgi.info

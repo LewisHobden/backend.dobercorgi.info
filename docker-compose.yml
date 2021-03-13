@@ -1,0 +1,52 @@
+version: '3.4'
+
+services:
+  dobercorgi_webserver:
+    image: webserver
+    container_name: webserver
+    ports:
+      - "80:80"
+    networks:
+      - dbnetwork
+    volumes:
+      - ./:/var/www/html/
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+  dobercorgi_database:
+    container_name: dobercorgi-database
+    image: mysql/mysql-server
+    networks:
+      - dbnetwork
+    environment:
+      MYSQL_ROOT_PASSWORD: laravel
+      MYSQL_ROOT_HOST: '%'
+    volumes:
+      - databasevolume:/var/lib/mysql
+    ports:
+      - '3306:3306'
+
+  adminer:
+    image: adminer
+    networks:
+      - dbnetwork
+    ports:
+      - '8080:8080'
+
+  dobercorgi_development:
+    image: development
+    container_name: development
+    volumes:
+      - ./:/var/www/html/
+    networks:
+      - dbnetwork
+    build:
+      context: .
+      dockerfile: Development.dockerfile
+
+volumes:
+  databasevolume:
+
+networks:
+  dbnetwork:

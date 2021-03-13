@@ -1,4 +1,4 @@
-name: Laravel
+name: Laravel Tests
 
 on:
   push:
@@ -8,7 +8,6 @@ on:
 
 jobs:
   laravel-tests:
-
     runs-on: ubuntu-latest
 
     steps:

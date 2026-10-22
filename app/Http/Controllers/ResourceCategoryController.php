@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\ResourceCategory;
+use App\Models\ResourceCategory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;

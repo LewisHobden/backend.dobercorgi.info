@@ -1,28 +1,21 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-
+use App\Enums\DiscordPermissions;
+use App\Http\Controllers\DiscordLoginController;
+use App\Http\Controllers\DiscordRedirectController;
+use App\Http\Controllers\ResourceCategoryController;
+use App\Http\Controllers\ResourceController;
+use App\Http\Middleware\IsAdmin;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::view('/', 'welcome');
 
-Route::get("/login","DiscordRedirectController")->name("login");
-Route::get("/login/discord-callback", "DiscordLoginController@login");
-Route::get("/logout","DiscordLoginController@logout");
+Route::get("/login", DiscordRedirectController::class)->name("login");
+Route::get("/login/discord-callback", [DiscordLoginController::class, "login"]);
+Route::get("/logout", [DiscordLoginController::class, "logout"]);
 
-Route::resource("categories.resources","ResourceController")
-    ->middleware(["auth",\App\Http\Middleware\IsAdmin::class . ":" . \App\Enums\DiscordPermissions::MANAGE_WEBHOOKS]);
+Route::resource("categories.resources", ResourceController::class)
+    ->middleware(["auth", IsAdmin::class . ":" . DiscordPermissions::MANAGE_WEBHOOKS]);
 
-Route::resource("categories","ResourceCategoryController")
-    ->middleware(["auth",\App\Http\Middleware\IsAdmin::class . ":" . \App\Enums\DiscordPermissions::MANAGE_WEBHOOKS]);
+Route::resource("categories", ResourceCategoryController::class)
+    ->middleware(["auth", IsAdmin::class . ":" . DiscordPermissions::MANAGE_WEBHOOKS]);

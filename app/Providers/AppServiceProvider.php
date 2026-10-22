@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Repositories\Interfaces\UserRepositoryInterface;
+use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
@@ -9,24 +11,30 @@ use Illuminate\Support\ServiceProvider;
 class AppServiceProvider extends ServiceProvider
 {
     /**
-     * Register any application services.
+     * All of the container bindings that should be registered.
      *
-     * @return void
+     * @var array<class-string, class-string>
      */
-    public function register()
+    public $bindings = [
+        UserRepositoryInterface::class => UserRepository::class,
+    ];
+
+    /**
+     * Register any application services.
+     */
+    public function register(): void
     {
         //
     }
 
     /**
      * Bootstrap any application services.
-     *
-     * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         // Change all URLs to HTTPS on the live site.
-        if("production" === App::environment())
-            URL::forceScheme("https");
+        if ('production' === App::environment()) {
+            URL::forceScheme('https');
+        }
     }
 }

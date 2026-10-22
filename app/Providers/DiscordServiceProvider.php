@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use App;
 use Illuminate\Support\ServiceProvider;
 use League\OAuth2\Client\Provider\AbstractProvider;
 use Wohali\OAuth2\Client\Provider\Discord;
@@ -38,8 +37,8 @@ class DiscordServiceProvider extends ServiceProvider
             $redirect  = url("login/discord-callback/");
 
             return new Discord([
-                'clientId'     => env('DISCORD_CLIENT_ID'),
-                'clientSecret' => env('DISCORD_CLIENT_SECRET'),
+                'clientId'     => config('services.discord.client_id'),
+                'clientSecret' => config('services.discord.client_secret'),
                 'redirectUri'  => $redirect
             ]);
         });

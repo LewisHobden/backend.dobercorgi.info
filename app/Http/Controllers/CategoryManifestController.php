@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\ManifestRequest;
-use App\ResourceCategory;
+use App\Models\ManifestRequest;
+use App\Models\ResourceCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 

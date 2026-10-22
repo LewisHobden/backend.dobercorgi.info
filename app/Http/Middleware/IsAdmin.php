@@ -16,7 +16,11 @@ class IsAdmin
      */
     public function handle($request,Closure $next,$permission)
     {
-        if($permission != ($request->session()->get("guild_permissions") & $permission))
+        // Discord returns permissions as a string and middleware params are strings, so compare as integers.
+        $permission = (int)$permission;
+        $granted = (int)$request->session()->get("guild_permissions",0);
+
+        if($permission !== ($granted & $permission))
             return abort(403);
 
         return $next($request);

@@ -1,13 +1,17 @@
 <?php
 
-namespace App\Repositories;
+namespace Tests\Unit;
 
-use App\User;
+use App\Models\User;
+use App\Repositories\UserRepository;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Wohali\OAuth2\Client\Provider\DiscordResourceOwner;
 
 class UserRepositoryTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     public function testFindOrCreateFromDiscordWhenUserDoesNotExist()
     {
         $owner = new DiscordResourceOwner([

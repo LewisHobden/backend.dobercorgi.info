@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Repositories\Interfaces\UserRepositoryInterface;
 use GuzzleHttp\Client;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Wohali\OAuth2\Client\Provider\Discord;
 
 class DiscordLoginController extends Controller
@@ -15,7 +16,6 @@ class DiscordLoginController extends Controller
     /** @var UserRepositoryInterface */
     private $userRepository = null;
 
-    use AuthenticatesUsers;
     /**
      * DiscordLoginController constructor.
      * @param  Discord  $provider
@@ -27,12 +27,12 @@ class DiscordLoginController extends Controller
         $this->userRepository = $repository;
     }
 
-    public function redirectPath()
-    {
-        return "/";
-    }
-
-    public function validateLogin(Request $request)
+    /**
+     * Handles the OAuth2 callback from Discord, logging the user in.
+     * @param  Request  $request
+     * @return RedirectResponse
+     */
+    public function login(Request $request): RedirectResponse
     {
         $request->validate([
             "code" => "required|string",
@@ -40,11 +40,8 @@ class DiscordLoginController extends Controller
         ]);
 
         if($request->query("state") !== $request->session()->get("oauthToken"))
-            return abort(403,"State has changed.");
-    }
+            abort(403,"State has changed.");
 
-    public function attemptLogin(Request $request)
-    {
         // Authenticate with OAuth2.
         $access_token = $this->provider->getAccessToken("authorization_code",["code" => $request->query("code")]);
         $resource_owner = $this->provider->getResourceOwner($access_token);
@@ -57,15 +54,19 @@ class DiscordLoginController extends Controller
         $permission_controller->setUser($user,$access_token);
         $permission_controller->cachePrivileges();
 
-        $this->guard()->login($user);
-
-        return true;
-    }
-
-    public function logout()
-    {
-        auth()->logout();
+        Auth::login($user);
+        $request->session()->regenerate();
 
         return redirect()->intended("/");
+    }
+
+    public function logout(Request $request): RedirectResponse
+    {
+        Auth::logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect("/");
     }
 }

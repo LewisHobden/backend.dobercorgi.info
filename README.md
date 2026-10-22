@@ -10,14 +10,18 @@ The production server runs on a PHP-Apache container to keep it lightweight.
 File uploading is supported with S3-compatible storage or local.
 
 ## Getting Started Developing
-The `docker-compose.yml` file is for development purposes, it sets up the database and a container called "development" with NPM and Composer installed for your dependencies.
+Local development uses [Laravel Sail](https://laravel.com/docs/sail), so you only need Docker installed.
 
-1. Build dev containers locally using `docker-compose build`.
-2. Run the containers using `docker-compose up -d`.
-3. Copy `.env.example` to `.env`, the default values will suffice but you will need a [Discord Application](https://discord.com/developers/) to authenticate with.
-4. To set up the database, create a database called `laravel` on your dev SQL database using adminer at http://localhost:8080
-5. To install dependencies, run `docker exec -it development sh` to open a shell into the dev container and run the following:
-    - `composer install`
-    - `npm install`
-    - `npm run dev`
-6. Run `php artisan migrate` in the development container to run migrations.
+1. Copy `.env.example` to `.env`. The defaults will suffice, but you will need a [Discord Application](https://discord.com/developers/) to authenticate with.
+   If ports 80 or 3306 are already in use, set `APP_PORT` / `FORWARD_DB_PORT` (and `APP_URL`) in `.env`.
+2. Install the PHP dependencies using a throwaway container:
+   ```shell
+   docker run --rm -u "$(id -u):$(id -g)" -v "$(pwd):/var/www/html" -w /var/www/html laravelsail/php84-composer:latest composer install
+   ```
+3. Start the containers with `./vendor/bin/sail up -d`.
+4. Run the following:
+    - `./vendor/bin/sail artisan key:generate`
+    - `./vendor/bin/sail artisan migrate`
+    - `./vendor/bin/sail npm install`
+    - `./vendor/bin/sail npm run dev` (or `npm run build` for a one-off build)
+5. Run the tests with `./vendor/bin/sail artisan test`.

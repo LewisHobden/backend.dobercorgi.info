@@ -2,16 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\DiscordPermission;
-use App\GuildPermission;
-use App\User;
+use App\Models\User;
 use GuzzleHttp\Client;
 use League\OAuth2\Client\Token\AccessTokenInterface;
 use Wohali\OAuth2\Client\Provider\Discord;
 
 class GuildPermissionController extends Controller
 {
-    const API_BASE_URL = 'https://discordapp.com/api/v6/';
+    const API_BASE_URL = 'https://discord.com/api/v10/';
     const PERMISSION_ENDPOINT = "users/@me/guilds";
 
     /** @var Client */
@@ -44,7 +42,7 @@ class GuildPermissionController extends Controller
         $guilds = json_decode((string)$response->getBody());
 
         foreach($guilds as $guild) {
-            if($guild->id === env("DISCORD_GUILD_ID")) {
+            if($guild->id === config("services.discord.guild_id")) {
                 session(["guild_permissions" => $guild->permissions]);
                 return;
             }

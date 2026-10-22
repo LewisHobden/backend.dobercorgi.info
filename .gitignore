@@ -134,3 +134,11 @@ Homestead.json
 _ide_*
 
 # End of https://www.toptal.com/developers/gitignore/api/laravel,jetbrains
+
+### Laravel 13 / Vite ###
+/public/build
+/public/hot
+/.phpunit.cache
+/storage/pail
+_ide_helper.php
+.phpstorm.meta.php

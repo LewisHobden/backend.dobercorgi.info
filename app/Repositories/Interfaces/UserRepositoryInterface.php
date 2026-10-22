@@ -2,7 +2,7 @@
 
 namespace App\Repositories\Interfaces;
 
-use App\User;
+use App\Models\User;
 use Wohali\OAuth2\Client\Provider\DiscordResourceOwner;
 
 interface UserRepositoryInterface

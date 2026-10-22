@@ -3,7 +3,7 @@
 namespace App\Repositories;
 
 use App\Repositories\Interfaces\UserRepositoryInterface;
-use App\User;
+use App\Models\User;
 use Wohali\OAuth2\Client\Provider\DiscordResourceOwner;
 
 class UserRepository implements UserRepositoryInterface

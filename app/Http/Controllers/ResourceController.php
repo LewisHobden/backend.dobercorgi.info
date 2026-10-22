@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Resource;
-use App\ResourceCategory;
+use App\Models\Resource;
+use App\Models\ResourceCategory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -71,9 +71,9 @@ class ResourceController extends Controller
         // Add the resource to the database.
         Resource::create([
             "category_id" => $category_id,
-            "title" => $request->get("title"),
-            "action" => $request->get("action"),
-            "content" => $request->get("content"),
+            "title" => $request->input("title"),
+            "action" => $request->input("action"),
+            "content" => $request->input("content"),
             "file_key" => $filename ?? ""
         ]);
 
@@ -84,7 +84,7 @@ class ResourceController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param int $category_id
-     * @param \App\Resource $resource
+     * @param \App\Models\Resource $resource
      * @return \Illuminate\Http\Response
      */
     public function edit(int $category_id,Resource $resource)
@@ -104,7 +104,7 @@ class ResourceController extends Controller
      *
      * @param int $category_id
      * @param \Illuminate\Http\Request $request
-     * @param \App\Resource $resource
+     * @param \App\Models\Resource $resource
      * @return \Illuminate\Http\RedirectResponse
      */
     public function update(int $category_id,Request $request,Resource $resource)
@@ -127,9 +127,9 @@ class ResourceController extends Controller
         }
 
         // Add the resource to the database.
-        $resource->title = $request->get("title");
-        $resource->action = $request->get("action");
-        $resource->content = $request->get("content");
+        $resource->title = $request->input("title");
+        $resource->action = $request->input("action");
+        $resource->content = $request->input("content");
 
         $resource->save();
 
@@ -140,7 +140,7 @@ class ResourceController extends Controller
      * Remove the specified resource from storage.
      *
      * @param int $category_id
-     * @param \App\Resource $resource
+     * @param \App\Models\Resource $resource
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Exception
      */

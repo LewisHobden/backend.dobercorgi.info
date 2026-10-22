@@ -27,6 +27,20 @@ class AdminAccessTest extends TestCase
             ->assertForbidden();
     }
 
+    public function testPermissionsAsReturnedByDiscordApiAreAccepted(): void
+    {
+        $this->logIn();
+
+        // Discord's v10 API returns the permission bitfield as a string, which can exceed 32 bits.
+        $this->withSession(['guild_permissions' => '2251799813685247'])
+            ->get('/categories')
+            ->assertOk();
+
+        $this->withSession(['guild_permissions' => (string)DiscordPermissions::ADMINISTRATOR])
+            ->get('/categories')
+            ->assertForbidden();
+    }
+
     public function testUserWithPermissionCanManageCategories(): void
     {
         $this->logIn();
